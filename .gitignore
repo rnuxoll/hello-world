@@ -1,12 +1,83 @@
-*.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+public class Battleship
+{
+		public static void main()
+    {
+        char grid[][] = new char[10][10];
+        
+        fillGrid( grid );        
+        placeShip( grid , 'B' , 4 );
+        placeShip( grid , 'A' , 5 );
+        placeShip( grid , 'S' , 3 );
+        placeShip( grid , 'C' , 3 );
+        placeShip( grid , 'D' , 2 );
+        printGrid( grid );
+    }
+    
+    public static void placeShip( char grid[][] , char ship , int shipLength )
+    {
+        boolean legal = true;
+        int row, col, dir;
+        do
+        {
+            dir = (int)(Math.random() * 2 ) ;
+            if( dir == 0 ) // vertical
+            {
+                row = (int)(Math.random()*(10-shipLength ) );
+                col = (int)(Math.random()*10 );
+                legal = testPosition( grid, dir , row , col , shipLength );
+            }
+            else // horizontal
+            {
+                row = (int)(Math.random()*10 );
+                col = (int)(Math.random()*(10-shipLength ) );
+                legal = testPosition( grid, dir , row , col , shipLength );
+            }
+        }
+        while( !legal );
+        
+        if( dir == 0 )   // vertical
+        {
+            for( int r = row ; r < row+shipLength ; r++ )
+                grid[r][col] = ship;
+        }
+        else        // horizontal
+        {
+            for( int c = col ; c < col+shipLength ; c++ )
+                grid[row][c] = ship;
+        }
+    }
+    
+    public static boolean testPosition( char grid[][] , int dir ,  int row , int col , int shipLength )
+    {
+        if( dir == 0 )   // vertical 
+        {
+            for( int r = row ; r < row + shipLength ; r++ )
+                if( grid[r][col] != '~' ) 
+                    return false;
+        }
+        else   // horizontal 
+        {
+            for( int c = col ; c < col + shipLength ; c++ )
+                if( grid[row][c] != '~' ) 
+                    return false;
+        }
+        return true;
+    }
+    
+    public static void fillGrid( char grid[][] )
+    {
+        for( int r = 0 ; r < grid.length ; r++ )
+            for( int c = 0 ; c < grid[r].length ; c++ )
+                grid[r][c] = '~' ;
+    }
+    
+    public static void printGrid( char grid[][] )
+    {
+        for( int r = 0 ; r < grid.length ; r++ )
+        {
+            for( int c = 0 ; c < grid[r].length ; c++ )
+                System.out.print( grid[r][c] + " " ) ;
+            System.out.println();   
+        }
+    }
+}
